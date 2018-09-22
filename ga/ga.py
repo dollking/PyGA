@@ -7,6 +7,7 @@
 """
 
 from copy import deepcopy
+from multiprocessing import cpu_count, Pool
 
 from .mutation import Mutation
 from .crossover import Crossover
@@ -14,7 +15,8 @@ from .selection import ChromosomeSelection, SurvivorSelection
 
 
 class GeneticAlgorithm(object):
-    def __init__(self, fitness_func, terminate_threshold, chromosome, population_size, condition='max', epoch=1000):
+    def __init__(self, fitness_func, terminate_threshold, chromosome, population_size,
+                 condition='max', thread_count=1, epoch=1000):
         self.epoch = epoch
         self.fitness_function = fitness_func
         self.terminate_threshold = terminate_threshold
@@ -34,7 +36,9 @@ class GeneticAlgorithm(object):
         self.survivor_method = None
 
         self.population = []
+        self.current_fitness = []
         self.make_chromosome()
+        self.core_count = thread_count if thread_count <= (cpu_count() - 1) else (cpu_count() - 1)
 
     def add_method(self, step, method_name, **kwargs):
         if step == 'selection':
@@ -63,23 +67,25 @@ class GeneticAlgorithm(object):
             for gene in self.population[-1].chromosome:
                 gene.get_value()
 
+    def operation_set(self, _):
+        return self.mutation_method(self.crossover_method(self.select_method(self.current_fitness, self.population)))
+
     def run(self):
         cnt = 0
-
+        pool = Pool(self.core_count)
         isReverse = True if self.condition == 'max' else False
+
         while cnt < self.epoch:
             self.population.sort(key=lambda x: self.fitness_function(x.get_value_list()), reverse=isReverse)
-            self.selection.set_current_fitness(self.population, self.fitness_function)
+            self.current_fitness = [self.fitness_function(i.get_value_list()) for i in self.population]
 
-            if (self.condition == 'max' and self.selection.current_fitness[0] > self.terminate_threshold) or \
-                    (self.condition == 'min' and self.selection.current_fitness[0] < self.terminate_threshold):
+            if (self.condition == 'max' and self.current_fitness[0] > self.terminate_threshold) or \
+                    (self.condition == 'min' and self.current_fitness[0] < self.terminate_threshold):
                 break
 
-            next_population = self.survivor_method()
-            while len(next_population) < self.population_size:
-                next_population.append(self.mutation_method(self.crossover_method(self.select_method())))
+            next_population = self.survivor_method(self.current_fitness, self.population)
+            next_population.extend(pool.map(self.operation_set, range(self.population_size - len(next_population))))
 
-            self.selection.init_current_fitness()
             self.population = next_population
 
             cnt += 1

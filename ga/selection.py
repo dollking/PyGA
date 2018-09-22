@@ -9,32 +9,14 @@
 from random import randrange, uniform, random
 
 
-class Selection(object):
-    population = []
-    current_fitness = []
+class ChromosomeSelection(object):
     def __init__(self, population_size):
         self.parameter = None
         self.population_size = population_size
-
-
-    def set_current_fitness(self, population, fitness_func):
-        if not len(self.current_fitness):
-            for i in range(self.population_size):
-                self.population.append(population[i])
-                self.current_fitness.append(fitness_func(population[i].get_value_list()))
-
-    def init_current_fitness(self):
-        self.population = []
-        self.current_fitness = []
-
-
-class ChromosomeSelection(Selection):
-    def __init__(self, population_size):
-        super(ChromosomeSelection, self).__init__(population_size)
         self.methods = {'roulette': self.roulette, 'tournament': self.tournament,
                         'ranking': self.ranking, 'elitist': self.elitist}
 
-    def roulette(self):
+    def roulette(self, current_fitness, population):
         isUniform = self.parameter['isUniform'] if 'isUniform' in self.parameter else True
 
         tmp_set = set([])
@@ -45,10 +27,10 @@ class ChromosomeSelection(Selection):
 
         else:
             probability_list = []
-            worst = Selection.current_fitness[-1]
-            best = Selection.current_fitness[0]
+            worst = current_fitness[-1]
+            best = current_fitness[0]
 
-            for i in Selection.current_fitness:
+            for i in current_fitness:
                 probability_list.append(abs(2 * worst - i - best) / 3.)
 
             while len(tmp_set) < 2:
@@ -59,9 +41,9 @@ class ChromosomeSelection(Selection):
                     if select_point < _sum:
                         tmp_set.add(i)
 
-        return [Selection.population[i] for i in tmp_set]
+        return [population[i] for i in tmp_set]
 
-    def tournament(self):
+    def tournament(self, current_fitness, population):
         threshold = self.parameter['threshold'] if 'threshold' in self.parameter else 0.5
 
         tmp_set = set([])
@@ -71,16 +53,16 @@ class ChromosomeSelection(Selection):
             else:
                 tmp_set.add(self.roulette()[1])
 
-        return [Selection.population[i] for i in tmp_set]
+        return [population[i] for i in tmp_set]
 
-    def ranking(self):
+    def ranking(self, current_fitness, population):
         tmp_set = set([])
 
         probability_list = []
-        _max = max(Selection.current_fitness)
-        _min = min(Selection.current_fitness)
+        _max = max(current_fitness)
+        _min = min(current_fitness)
 
-        for i in Selection.current_fitness:
+        for i in current_fitness:
             probability_list.append(_max + (_min - _max) * i / (self.population_size - 1))
 
         while len(tmp_set) < 2:
@@ -91,9 +73,9 @@ class ChromosomeSelection(Selection):
                 if select_point < _sum:
                     tmp_set.add(i)
 
-        return [Selection.population[i] for i in tmp_set]
+        return [population[i] for i in tmp_set]
 
-    def elitist(self):
+    def elitist(self, current_fitness, population):
         elite_rate = self.parameter['elite_rate'] if 'elite_rate' in self.parameter else 0.3
         exception_rate = self.parameter['exception_rate'] if 'exception_rate' in self.parameter else 0.0
         tmp_set = set([])
@@ -105,15 +87,16 @@ class ChromosomeSelection(Selection):
             else:
                 tmp_set.add(randrange(0, int(self.population_size * elite_rate)))
 
-        return [Selection.population[i] for i in tmp_set]
+        return [population[i] for i in tmp_set]
 
 
-class SurvivorSelection(Selection):
+class SurvivorSelection(object):
     def __init__(self, population_size):
-        super(SurvivorSelection, self).__init__(population_size)
+        self.parameter = None
+        self.population_size = population_size
         self.methods = {'roulette': self.roulette, 'elitist': self.elitist}
 
-    def roulette(self):
+    def roulette(self, current_fitness, population):
         isUniform = self.parameter['isUniform'] if 'isUniform' in self.parameter else True
         selection_rate = self.parameter['selection_rate'] if 'selection_rate' in self.parameter else 0.6
 
@@ -127,10 +110,10 @@ class SurvivorSelection(Selection):
 
         else:
             probability_list = []
-            worst = Selection.current_fitness[-1]
-            best = Selection.current_fitness[0]
+            worst = current_fitness[-1]
+            best = current_fitness[0]
 
-            for i in Selection.current_fitness:
+            for i in current_fitness:
                 probability_list.append(abs(2 * worst - i - best) / 3.)
 
             while len(tmp_set) < selection_size:
@@ -141,9 +124,9 @@ class SurvivorSelection(Selection):
                     if select_point < _sum:
                         tmp_set.add(i)
 
-        return [Selection.population[i] for i in tmp_set]
+        return [population[i] for i in tmp_set]
 
-    def elitist(self):
+    def elitist(self, current_fitness, population):
         elite_rate = self.parameter['elite_rate'] if 'elite_rate' in self.parameter else 0.3
         exception_rate = self.parameter['exception_rate'] if 'exception_rate' in self.parameter else 0.0
         selection_rate = self.parameter['selection_rate'] if 'selection_rate' in self.parameter else 0.6
@@ -158,4 +141,4 @@ class SurvivorSelection(Selection):
             else:
                 tmp_set.add(randrange(0, piv))
 
-        return [Selection.population[i] for i in tmp_set]
+        return [population[i] for i in tmp_set]
