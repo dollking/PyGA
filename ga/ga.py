@@ -37,6 +37,7 @@ class GeneticAlgorithm(object):
 
         self.population = []
         self.current_fitness = []
+
         self.make_chromosome()
         self.core_count = thread_count if thread_count <= (cpu_count() - 1) else (cpu_count() - 1)
 
@@ -84,7 +85,9 @@ class GeneticAlgorithm(object):
                 break
 
             next_population = self.survivor_method(self.current_fitness, self.population)
-            next_population.extend(pool.map(self.operation_set, range(self.population_size - len(next_population))))
+            remain_size = self.population_size - len(next_population)
+            next_population.extend(pool.map(self.operation_set, range(remain_size),
+                                                 chunksize=int(remain_size/self.core_count)))
 
             self.population = next_population
 
