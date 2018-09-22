@@ -1,3 +1,5 @@
+from time import time
+
 from ga.ga import GeneticAlgorithm
 from ga.chromosome import Chromosome
 
@@ -28,7 +30,7 @@ if __name__ == '__main__':
     chromosome.add_gene('choice', [0, 1])
 
     # make object for genetic algorithm
-    genetic = GeneticAlgorithm(fitness, 50, chromosome, 100)
+    genetic = GeneticAlgorithm(fitness, 50, chromosome, 100, thread_count=2)
 
     # set operation using genetic algorithm
     genetic.add_method('selection', 'roulette')
@@ -37,4 +39,8 @@ if __name__ == '__main__':
     genetic.add_method('survivor', 'elitist')
 
     # learning
+    t = time()
     genetic.run()
+
+    print((time() - t) / 60)
+    print(genetic.population[0].get_value_list())

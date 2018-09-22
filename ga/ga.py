@@ -89,5 +89,3 @@ class GeneticAlgorithm(object):
             self.population = next_population
 
             cnt += 1
-
-        print(self.population[0].get_value_list())
