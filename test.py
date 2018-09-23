@@ -1,7 +1,7 @@
 from time import time
 
-from .ga.ga import GeneticAlgorithm
-from .ga.chromosome import Chromosome
+from ga.ga import GeneticAlgorithm
+from ga.chromosome import Chromosome
 
 def fitness(data):
     limit = 15

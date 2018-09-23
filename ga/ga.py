@@ -15,6 +15,12 @@ from .crossover import Crossover
 from .selection import ChromosomeSelection, SurvivorSelection
 
 
+def progress(rate):
+    cnt = int(rate * 50)
+    char = '#' * cnt + '-'*(50 - cnt)
+    print('>>>progress : |{}|'.format(char), end='\r', flush=True)
+
+
 class GeneticAlgorithm(object):
     def __init__(self, fitness_func, terminate_threshold, chromosome, population_size,
                  condition='max', thread_count=1, epoch=1000):
@@ -98,6 +104,7 @@ class GeneticAlgorithm(object):
             self.population = next_population
 
             cnt += 1
+            progress(cnt / self.epoch)
 
     @property
     def help(self):
