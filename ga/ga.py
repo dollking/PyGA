@@ -6,6 +6,7 @@
 	:license: MIT LICENSE 1.0 .
 """
 
+import os
 from copy import deepcopy
 from multiprocessing import cpu_count, Pool
 
@@ -69,16 +70,21 @@ class GeneticAlgorithm(object):
                 gene.get_value()
 
     def operation_set(self, _):
-        return self.mutation_method(self.crossover_method(self.select_method(self.current_fitness, self.population)))
+        return self.mutation_method(self.crossover_method(self.select_method(self.current_fitness, self.population)), self.population)
 
     def run(self):
         cnt = 0
+        try:
+            os.nice(19)
+        except AttributeError:
+            pass
+
         pool = Pool(self.core_count)
         isReverse = True if self.condition == 'max' else False
 
         while cnt < self.epoch:
-            self.population.sort(key=lambda x: self.fitness_function(x.get_value_list()), reverse=isReverse)
-            self.current_fitness = [self.fitness_function(i.get_value_list()) for i in self.population]
+            self.population.sort(key=lambda x: self.fitness_function(x.get_values), reverse=isReverse)
+            self.current_fitness = [self.fitness_function(i.get_values) for i in self.population]
 
             if (self.condition == 'max' and self.current_fitness[0] > self.terminate_threshold) or \
                     (self.condition == 'min' and self.current_fitness[0] < self.terminate_threshold):
@@ -87,8 +93,14 @@ class GeneticAlgorithm(object):
             next_population = self.survivor_method(self.current_fitness, self.population)
             remain_size = self.population_size - len(next_population)
             next_population.extend(pool.map(self.operation_set, range(remain_size),
-                                                 chunksize=int(remain_size/self.core_count)))
+                                            chunksize=int(remain_size/self.core_count)))
 
             self.population = next_population
 
             cnt += 1
+
+    @property
+    def help(self):
+        return '------------------------------------------------------------------------------------------------'.join(
+            [self.selection.help, self.crossover.help, self.mutation.help, self.survivor.help])
+

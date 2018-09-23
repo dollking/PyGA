@@ -30,12 +30,12 @@ if __name__ == '__main__':
     chromosome.add_gene('choice', [0, 1])
 
     # make object for genetic algorithm
-    genetic = GeneticAlgorithm(fitness, 50, chromosome, 200, thread_count=4)
-
+    genetic = GeneticAlgorithm(fitness, 50, chromosome, 200, thread_count=3)
+    print(genetic.help)
     # set operation using genetic algorithm
     genetic.add_method('selection', 'roulette')
     genetic.add_method('crossover', 'one_point')
-    genetic.add_method('mutation', 'random_setting')
+    genetic.add_method('mutation', 'elitist')
     genetic.add_method('survivor', 'elitist')
 
     # learning
@@ -43,4 +43,4 @@ if __name__ == '__main__':
     genetic.run()
 
     print((time() - t) / 60)
-    print(genetic.population[0].get_value_list())
+    print(genetic.population[0])

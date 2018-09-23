@@ -43,7 +43,7 @@ class ChromosomeSelection(object):
 
         return [population[i] for i in tmp_set]
 
-    def tournament(self, current_fitness, population):
+    def tournament(self, _, population):
         threshold = self.parameter['threshold'] if 'threshold' in self.parameter else 0.5
 
         tmp_set = set([])
@@ -88,6 +88,16 @@ class ChromosomeSelection(object):
                 tmp_set.add(randrange(0, int(self.population_size * elite_rate)))
 
         return [population[i] for i in tmp_set]
+
+    @property
+    def help(self):
+        return '''
+        SELECTION - It is operation for select two chromosome used in crossover operation.
+        roulette: Select chromosome using crossover randomly. You can choice how to set probability between equal probability and probability determined by fitness value.
+        tournament: Choose one from selected two chromosome randomly from equal probability. And then repeat this twice. 
+        ranking: Select chromosome using crossover randomly after setting the selection probability according to fitness value.
+        elitist: Only elite chromosome survive. If you want, you can select chromosome in the other range.
+        '''
 
 
 class SurvivorSelection(object):
@@ -142,3 +152,11 @@ class SurvivorSelection(object):
                 tmp_set.add(randrange(0, piv))
 
         return [population[i] for i in tmp_set]
+
+    @property
+    def help(self):
+        return '''
+        SURVIVOR SELECTION - It is to select the chromosomes that will survive in the next generation.
+        roulette: roulette: Select surviving chromosome randomly. You can choice how to set probability between equal probability and probability determined by fitness value.
+        elitist: Only elite chromosome survive. If you want, you can select chromosome in the other range.
+        '''
