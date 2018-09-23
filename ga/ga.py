@@ -18,7 +18,7 @@ from .selection import ChromosomeSelection, SurvivorSelection
 def progress(rate):
     cnt = int(rate * 50)
     char = '#' * cnt + '-' * (50 - cnt)
-    print('>>>progress : |{}|({}%)'.format(char, rate * 100), end='\r', flush=True)
+    print('>>>progress : |{}|({:.2f}%)'.format(char, rate * 100), end='\r', flush=True)
 
 
 class GeneticAlgorithm(object):
