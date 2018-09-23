@@ -17,7 +17,7 @@ from .selection import ChromosomeSelection, SurvivorSelection
 
 def progress(rate):
     cnt = int(rate * 50)
-    char = '#' * cnt + '-'*(50 - cnt)
+    char = '#' * cnt + '-' * (50 - cnt)
     print('>>>progress : |{}|({}%)'.format(char, rate * 100), end='\r', flush=True)
 
 
@@ -75,31 +75,32 @@ class GeneticAlgorithm(object):
             for gene in self.population[-1].chromosome:
                 gene.get_value()
 
-    def operation_set(self, _):
-        return self.mutation_method(self.crossover_method(self.select_method(self.current_fitness, self.population)), self.population)
-
     def run(self):
-        cnt = 0
         try:
             os.nice(19)
         except AttributeError:
             pass
 
+        cnt = 0
         pool = Pool(self.core_count)
         isReverse = True if self.condition == 'max' else False
-
         while cnt < self.epoch:
-            self.population.sort(key=lambda x: self.fitness_function(x.get_values), reverse=isReverse)
-            self.current_fitness = [self.fitness_function(i.get_values) for i in self.population]
+            self.current_fitness = pool.map(self.fitness_function, [p.get_values for p in self.population],
+                                            chunksize=int(self.population_size / self.core_count))
+            self.current_fitness, self.population = list(
+                map(list, zip(*(sorted(zip(self.current_fitness, self.population),
+                                       key=lambda x: x[0], reverse=isReverse)))))
 
             if (self.condition == 'max' and self.current_fitness[0] > self.terminate_threshold) or \
                     (self.condition == 'min' and self.current_fitness[0] < self.terminate_threshold):
                 break
 
             next_population = self.survivor_method(self.current_fitness, self.population)
-            remain_size = self.population_size - len(next_population)
-            next_population.extend(pool.map(self.operation_set, range(remain_size),
-                                            chunksize=int(remain_size/self.core_count)))
+            for _ in range(self.population_size - len(next_population)):
+                next_population.append(self.mutation_method(
+                    self.crossover_method(
+                        self.select_method(self.current_fitness, self.population)),
+                    self.population))
 
             self.population = next_population
 
@@ -110,4 +111,3 @@ class GeneticAlgorithm(object):
     def help(self):
         return '------------------------------------------------------------------------------------------------'.join(
             [self.selection.help, self.crossover.help, self.mutation.help, self.survivor.help])
-

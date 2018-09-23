@@ -30,7 +30,7 @@ if __name__ == '__main__':
     chromosome.add_gene('choice', [0, 1])
 
     # make object for genetic algorithm
-    genetic = GeneticAlgorithm(fitness, 50, chromosome, 200, thread_count=3)
+    genetic = GeneticAlgorithm(fitness, 50, chromosome, 50, thread_count=3)
     print(genetic.help)
     # set operation using genetic algorithm
     genetic.add_method('selection', 'roulette')
