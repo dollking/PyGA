@@ -93,13 +93,13 @@ class ChromosomeSelection(object):
     def help(self):
         return '''
         SELECTION - It is operation for select two chromosome used in crossover operation.
-        roulette: Select chromosome using crossover randomly. You can choice how to set probability between equal probability and probability determined by fitness value.
-                    (parameter: {'isUniform': boolean_data(True, False)})
-        tournament: Choose one from selected two chromosome randomly from equal probability. And then repeat this twice.
-                (parameter: {'threshold': float_data(0.0-1.0)})
-        ranking: Select chromosome using crossover randomly after setting the selection probability according to fitness value.
-        elitist: Only elite chromosome survive. If you want, you can select chromosome in the other range.
-                    (parameter: {'elite_rate': float_data(0.0-1.0), 'exception_rate': float_data(0.0-1.0)})
+                    'roulette': Select chromosome using crossover randomly. You can choice how to set probability between equal probability and probability determined by fitness value.
+                      - parameter: {'isUniform': boolean_data(True, False)})
+                    'tournament': Choose one from selected two chromosome randomly from equal probability. And then repeat this twice.
+                      - parameter: {'threshold': float_data(0.0-1.0)})
+                    'ranking': Select chromosome using crossover randomly after setting the selection probability according to fitness value.
+                    'elitist': Only elite chromosome survive. If you want, you can select chromosome in the other range.
+                      - parameter: {'elite_rate': float_data(0.0-1.0), 'exception_rate': float_data(0.0-1.0)})
         '''
 
 
@@ -160,8 +160,8 @@ class SurvivorSelection(object):
     def help(self):
         return '''
         SURVIVOR SELECTION - It is to select the chromosomes that will survive in the next generation.
-        roulette: roulette: Select surviving chromosome randomly. You can choice how to set probability between equal probability and probability determined by fitness value.
-                    (parameter: {'isUniform': boolean_data(True, False), 'selection_rate': float_data(0.0-1.0)})
-        elitist: Only elite chromosome survive. If you want, you can select chromosome in the other range.
-                    (parameter: {'elite_rate': float_data(0.0-1.0), 'exception_rate': float_data(0.0-1.0), 'selection_rate': float_data(0.0-1.0)})
+                    'roulette: roulette': Select surviving chromosome randomly. You can choice how to set probability between equal probability and probability determined by fitness value.
+                      - parameter: {'isUniform': boolean_data(True, False), 'selection_rate': float_data(0.0-1.0)})
+                    'elitist': Only elite chromosome survive. If you want, you can select chromosome in the other range.
+                      - parameter: {'elite_rate': float_data(0.0-1.0), 'exception_rate': float_data(0.0-1.0), 'selection_rate': float_data(0.0-1.0)})
         '''

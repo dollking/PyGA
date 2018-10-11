@@ -63,7 +63,8 @@ class Crossover(object):
     def help(self):
         return '''
         CROSSOVER - Crossover is a operation that mix two chromosome. We offer three method in this package.
-        one_point: Each chromosome divide into two on basis of one point. And then crossover after select one by one.
-        multi_point: Each chromosome divide into three on basis of one point. And then crossover after select two gene set in first chromosome and one gene set in the other.
-        uniform: Select gene randomly from an equal probability in two chromosome. (parameter: {'threshold': float_data})
+                    'one_point': Each chromosome divide into two on basis of one point. And then crossover after select one by one.
+                    'multi_point': Each chromosome divide into three on basis of one point. And then crossover after select two gene set in first chromosome and one gene set in the other.
+                    'uniform': Select gene randomly from an equal probability in two chromosome.
+                      - parameter: {'threshold': float_data}
         '''

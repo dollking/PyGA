@@ -43,8 +43,8 @@ class Mutation(object):
     def help(self):
         return '''
         MUTATION - Mutation is that select gene randomly and change. It do not always operate.
-        random_setting: The mutations randomly within a range set earlier.
-                    (parameter: {'mutation_count': integer_data(1-chromosome length), 'mutation_probability': float_data(0.0-1.0)})
-        elitist: Mutation value is selected in elite chromosome.
-                    (parameter: {'mutation_count': int_data(1-chromosome length), 'mutation_probability': float_data(0.0-1.0), 'elite_rate': float_data(0.0-1.0)})
+                   'random_setting': The mutations randomly within a range set earlier.
+                     - parameter: {'mutation_count': integer_data(1-chromosome length), 'mutation_probability': float_data(0.0-1.0)}
+                   'elitist': Mutation value is selected in elite chromosome.
+                     - parameter: {'mutation_count': int_data(1-chromosome length), 'mutation_probability': float_data(0.0-1.0), 'elite_rate': float_data(0.0-1.0)}
         '''

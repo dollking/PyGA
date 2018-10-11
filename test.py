@@ -1,4 +1,4 @@
-from time import time
+from time import time, sleep
 
 from ga.ga import GeneticAlgorithm
 from ga.chromosome import Chromosome
@@ -6,7 +6,7 @@ from ga.chromosome import Chromosome
 def fitness(data):
     limit = 15
     items = {0: [10, 2], 1: [5, 5], 2: [1, 1], 3: [3, 2], 4: [4, 5], 5: [3, 3]}
-
+    sleep(0.001)
     val = 0.0
     vol = 0.0
     for i in range(len(data)):
