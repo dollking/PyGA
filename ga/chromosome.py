@@ -28,3 +28,14 @@ class Chromosome(object):
 
     def __str__(self):
         return str(self.get_values)
+
+    @property
+    def help(self):
+        return '''
+        CHROMOSOME - Chromosome is tool that make chromosome shape and set gene's data type in chromosome.
+                     All chromosome's data type use this class. So, if you want to get gene's data in chromosome, call get_values.
+                     
+                     How To Make Chromosome:
+                        - Create Chromosome object.
+                        - Insert gene in the order you want using add_gene method.
+        '''

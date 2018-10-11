@@ -87,6 +87,7 @@ class GeneticAlgorithm(object):
         while cnt < self.epoch:
             self.current_fitness = pool.map(self.fitness_function, [p.get_values for p in self.population],
                                             chunksize=int(self.population_size / self.core_count))
+
             self.current_fitness, self.population = list(
                 map(list, zip(*(sorted(zip(self.current_fitness, self.population),
                                        key=lambda x: x[0], reverse=isReverse)))))

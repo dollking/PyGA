@@ -47,5 +47,5 @@ class DType(object):
 
         if self.dtype == 'int':
             self.value = int(self.value)
-        elif self.dtype == 'flat':
+        elif self.dtype == 'float':
             self.value = float(self.value)
