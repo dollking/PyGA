@@ -48,7 +48,7 @@ class GeneticAlgorithm(object):
         self.make_chromosome()
         self.core_count = thread_count if thread_count <= (cpu_count() - 1) else (cpu_count() - 1)
 
-    def add_method(self, step, method_name, **kwargs):
+    def add_method(self, step, method_name, kwargs={}):
         if step == 'selection':
             self.select_method = self.selection.methods[method_name]
             self.selection.parameter = kwargs
