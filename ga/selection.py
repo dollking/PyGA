@@ -16,7 +16,7 @@ class ChromosomeSelection(object):
         self.methods = {'roulette': self.roulette, 'tournament': self.tournament,
                         'ranking': self.ranking, 'elitist': self.elitist}
 
-    def roulette(self, current_fitness, population):
+    def roulette(self, current_fitness, population, k=4.):
         isUniform = self.parameter['isUniform'] if 'isUniform' in self.parameter else True
 
         tmp_set = set([])
@@ -31,7 +31,7 @@ class ChromosomeSelection(object):
             best = current_fitness[0]
 
             for i in current_fitness:
-                probability_list.append(abs(2 * worst - i - best) / 3.)
+                probability_list.append(abs((worst - i) + ((worst - best) / (k - 1))))
 
             while len(tmp_set) < 2:
                 _sum = 0.
