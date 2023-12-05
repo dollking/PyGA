@@ -23,17 +23,17 @@ class Chromosome(object):
             self.chromosome[index].mutation()
 
     @property
-    def get_values(self):
+    def values(self):
         return [i.value for i in self.chromosome]
 
     def __str__(self):
-        return str(self.get_values)
+        return str(self.values)
 
     @property
     def help(self):
         return '''
         CHROMOSOME - Chromosome is tool that make chromosome shape and set gene's data type in chromosome.
-                     All chromosome's data type use this class. So, if you want to get gene's data in chromosome, call get_values.
+                     All chromosome's data type use this class. So, if you want to get gene's data in chromosome, call values.
                      
                      How To Make Chromosome:
                         - Create Chromosome object.

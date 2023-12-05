@@ -85,7 +85,7 @@ class GeneticAlgorithm(object):
         pool = Pool(self.core_count)
         isReverse = True if self.condition == 'max' else False
         while cnt < self.epoch:
-            self.current_fitness = pool.map(self.fitness_function, [p.get_values for p in self.population],
+            self.current_fitness = pool.map(self.fitness_function, [p.values for p in self.population],
                                             chunksize=int(self.population_size / self.core_count))
 
             self.current_fitness, self.population = list(
@@ -107,6 +107,7 @@ class GeneticAlgorithm(object):
 
             cnt += 1
             progress(cnt / self.epoch)
+        print()
 
     @property
     def help(self):
