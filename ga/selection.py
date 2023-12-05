@@ -43,34 +43,32 @@ class ChromosomeSelection(object):
 
         return [population[i] for i in tmp_set]
 
-    def tournament(self, _, population):
+    def tournament(self, current_fitness, population):
         threshold = self.parameter['threshold'] if 'threshold' in self.parameter else 0.5
 
         tmp_set = set([])
         while len(tmp_set) < 2:
             if random() < threshold:
-                tmp_set.add(self.roulette()[0])
+                tmp_set.add(self.roulette(current_fitness, population)[0])
             else:
-                tmp_set.add(self.roulette()[1])
+                tmp_set.add(self.roulette(current_fitness, population)[1])
 
         return [population[i] for i in tmp_set]
 
-    def ranking(self, current_fitness, population):
+    def ranking(self, current_fitness, population, min_=1., max_=10.):
         tmp_set = set([])
 
         probability_list = []
-        _max = max(current_fitness)
-        _min = min(current_fitness)
 
         for i in current_fitness:
-            probability_list.append(_max + (_min - _max) * i / (self.population_size - 1))
+            probability_list.append(max_ + (min_ - max_) * i / (self.population_size - 1))
 
         while len(tmp_set) < 2:
-            _sum = 0.
+            sum_ = 0.
             select_point = uniform(0, sum(probability_list))
             for i in range(len(probability_list)):
-                _sum += probability_list[i]
-                if select_point < _sum:
+                sum_ += probability_list[i]
+                if select_point < sum_:
                     tmp_set.add(i)
 
         return [population[i] for i in tmp_set]
