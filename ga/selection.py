@@ -113,6 +113,7 @@ class SurvivorSelection(object):
     def roulette(self, current_fitness, population):
         isUniform = self.parameter['isUniform'] if 'isUniform' in self.parameter else True
         selection_rate = self.parameter['selection_rate'] if 'selection_rate' in self.parameter else 0.6
+        k = self.parameter['k'] if 'k' in self.parameter else 4.
 
         selection_size = int(self.population_size * selection_rate)
 
@@ -128,7 +129,7 @@ class SurvivorSelection(object):
             best = current_fitness[0]
 
             for i in current_fitness:
-                probability_list.append(abs(2 * worst - i - best) / 3.)
+                probability_list.append(abs((worst - i) + ((worst - best) / (k - 1))))
 
             while len(tmp_set) < selection_size:
                 _sum = 0.
